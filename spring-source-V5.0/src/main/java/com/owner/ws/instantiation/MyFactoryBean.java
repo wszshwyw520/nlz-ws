@@ -8,14 +8,14 @@ import org.springframework.beans.factory.FactoryBean;
  * @create 2020-10-24 11:06
  */
 @CacheComponent
-public class MyFactoryBean implements FactoryBean<User3> {
+public class MyFactoryBean implements FactoryBean<User> {
     @Override
-    public User3 getObject() throws Exception {
-        return new User3();
+    public User getObject() throws Exception {
+        return new User();
     }
 
     @Override
     public Class<?> getObjectType() {
-        return User3.class;
+        return User.class;
     }
 }

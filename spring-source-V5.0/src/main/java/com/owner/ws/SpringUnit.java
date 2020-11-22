@@ -1,5 +1,8 @@
-package com.owner.ws.instantiation;
+package com.owner.ws;
 
+import com.owner.ws.instantiation.Dept;
+import com.owner.ws.instantiation.User;
+import com.owner.ws.scope.ProtoTypeBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +30,22 @@ public class SpringUnit {
      */
     @Test
     public void testDefinitionRegistry(){
+        ClassPathXmlApplicationContext applicationContext =
+                new ClassPathXmlApplicationContext("spring.xml");
 
-        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring.xml");
         User user = (User) applicationContext.getBean("user");
         System.out.println(user);
 
         //未配置component-scan/bean标签，实现注解容器注册
         Dept dept = (Dept) applicationContext.getBean("dept");
         System.out.println(dept);
+    }
+
+
+    @Test
+    public void testScope(){
+        for(int i = 0;i < 10 ; i++){
+//            new Thread(()->System.out.println(applicationContext.getBean("protoTypeBean"))).start();
+        }
     }
 }
