@@ -2,7 +2,9 @@ package com.owner.ws;
 
 import com.owner.ws.instantiation.Dept;
 import com.owner.ws.instantiation.User;
+import com.owner.ws.scope.CustomScopeBean;
 import com.owner.ws.scope.ProtoTypeBean;
+import com.owner.ws.scope.SessionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +44,67 @@ public class SpringUnit {
     }
 
 
+    /**
+     * 多例
+     */
     @Test
     public void testScope(){
+        ClassPathXmlApplicationContext applicationContext =
+                new ClassPathXmlApplicationContext("spring.xml");
         for(int i = 0;i < 10 ; i++){
-//            new Thread(()->System.out.println(applicationContext.getBean("protoTypeBean"))).start();
+            new Thread(()->System.out.println(applicationContext.getBean("protoTypeBean"))).start();
         }
+    }
+
+    /**
+     * 作用域 REQUEST
+     */
+    @Test
+    public void testRequestScope() {
+        ClassPathXmlApplicationContext applicationContext =
+                new ClassPathXmlApplicationContext("spring.xml");
+
+        applicationContext.getBean("requestSessionBean");
+    }
+
+
+
+    /**
+     * 作用域 CustomScopeBean
+     * 线程内实例相同，不同线程实例不同
+     */
+    @Test
+    public void testCustomScopeBeanScope() {
+        ClassPathXmlApplicationContext applicationContext =
+                new ClassPathXmlApplicationContext("spring.xml");
+
+        for (int i = 0; i < 10 ; i++) {
+            new Thread(()->{
+                System.out.println(Thread.currentThread().getName() + "======" +applicationContext.getBean("customScopeBean"));
+                System.out.println(Thread.currentThread().getName() + "======" +applicationContext.getBean("customScopeBean"));
+            }).start();
+        }
+    }
+
+    @Test
+    public void testRedisScopeBeanScope() {
+        ClassPathXmlApplicationContext applicationContext =
+                new ClassPathXmlApplicationContext("spring.xml");
+
+        /**
+         * 测试在特定账号下token保持一致，其他均是不同的token
+         */
+        SessionUtils.IncrAndGetCurUser("zhangsan001");
+        System.out.println(applicationContext.getBean("redisInfo"));
+        SessionUtils.IncrAndGetCurUser("zhangsan002");
+        System.out.println(applicationContext.getBean("redisInfo"));
+        SessionUtils.IncrAndGetCurUser("zhangsan003");
+        System.out.println(applicationContext.getBean("redisInfo"));
+        SessionUtils.IncrAndGetCurUser("zhangsan004");
+        System.out.println(applicationContext.getBean("redisInfo"));
+        SessionUtils.IncrAndGetCurUser("zhangsan005");
+        System.out.println(applicationContext.getBean("redisInfo"));
+
+
     }
 }

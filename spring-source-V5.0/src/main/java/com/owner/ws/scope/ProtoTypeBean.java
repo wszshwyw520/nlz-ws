@@ -10,7 +10,11 @@ import org.springframework.context.annotation.Scope;
  * @create 2020-11-22 19:04
  */
 @CacheComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ProtoTypeBean {
 
+    /**
+     * 多例循环依赖会报错 throw new BeanCurrentlyInCreationException(beanName);
+     */
 }
